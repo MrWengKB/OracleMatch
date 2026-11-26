@@ -1,0 +1,62 @@
+name: 构建安卓 APK 和 AAB
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - version-history.md
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.7"
+
+      - name: 编译 APK 和 AAB
+        working-directory: android
+        run: gradle assembleRelease bundleRelease --no-daemon
+
+      - name: 重命名
+        run: |
+          cp android/app/build/outputs/apk/release/app-release.apk OracleMatch.apk
+          cp android/app/build/outputs/bundle/release/app-release.aab OracleMatch.aab
+
+      - name: 保存为构建产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: OracleMatch-android
+          path: |
+            OracleMatch.apk
+            OracleMatch.aab
+
+      - name: 发布到 Releases（APK、AAB 分开，可直接下载）
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # 取 version-history.md 的第一段（最新版本）写进发布说明，App 的更新提醒就显示这一段
+          awk '/^[[:space:]]*#/{n++} n==1' version-history.md > latest-notes.md
+          VERSION=$(grep -oE '[vV][0-9]+(\.[0-9]+)*' latest-notes.md | head -1)
+          {
+            echo "第 ${{ github.run_number }} 次构建。手机下载 OracleMatch.apk 安装即可离线使用；OracleMatch.aab 用于上传应用商店。"
+            echo
+            cat latest-notes.md
+          } > release-notes.md
+
+          gh release delete apk-latest --cleanup-tag -y || true
+          gh release create apk-latest OracleMatch.apk OracleMatch.aab \
+            --title "甲骨文配对 ${VERSION:-（最新）}" \
+            --notes-file release-notes.md \
+            --latest

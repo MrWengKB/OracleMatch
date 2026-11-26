@@ -25,3 +25,9 @@ python3 build_oraclelist.py
 
 【本地运行】
 在文件夹里运行 `python3 -m http.server`，再打开 http://localhost:8000 （直接双击 index.html 的话浏览器不允许读取 csv）。
+
+【安卓版】
+- 每次 `version-history.md` 更新并推送到 main，GitHub Actions 会自动编译，发布到 [Releases](https://github.com/MrWengKB/OracleMatch/releases/tag/apk-latest)：
+  - [OracleMatch.apk](https://github.com/MrWengKB/OracleMatch/releases/download/apk-latest/OracleMatch.apk)：手机直接下载安装（需要允许安装未知来源应用）。
+  - [OracleMatch.aab](https://github.com/MrWengKB/OracleMatch/releases/download/apk-latest/OracleMatch.aab)：上传 Google Play 等应用商店用。
+- App 离线运行；启动时如果有网络会检查更新，有新版就显示更新内容，由用户选择“下载安装”或“以后再说”。
