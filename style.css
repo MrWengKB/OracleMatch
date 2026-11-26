@@ -330,17 +330,6 @@ body.playing .game-screen {
     margin-top: 0;
 }
 
-/* 界面三：结束界面 */
-.end-screen {
-    display: block;
-    text-align: center;
-}
-
-.end-screen h2 {
-    color: #8b4513;
-    font-size: 2em;
-    margin-top: 50px;
-}
 
 /* 响应式设计 */
 @media (max-width: 600px) {

@@ -448,12 +448,6 @@ function backToMenu() {
     document.getElementById('inputScreen').classList.remove('hidden');
 }
 
-function closeGame() {
-    document.body.classList.remove('playing');
-    document.getElementById('gameScreen').classList.add('hidden');
-    document.getElementById('successModal').style.display = 'none';
-    document.getElementById('endScreen').classList.remove('hidden');
-}
 
 // 先加载字体，避免卡片上先显示系统字体
 document.fonts?.load('1em FZOracle', '日');
