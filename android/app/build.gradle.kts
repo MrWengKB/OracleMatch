@@ -41,10 +41,20 @@ android {
     // 固定签名：每次构建签名一致，新版才能直接覆盖安装旧版
     signingConfigs {
         create("release") {
-            storeFile = file("oraclematch.keystore")
-            storePassword = "android"
-            keyAlias = "oraclematch"
-            keyPassword = "android"
+            // GitHub Secrets 里设了私有密钥就用它（构建时解码到 ANDROID_KEYSTORE_FILE），
+            // 没设的话退回仓库里公开的 oraclematch.keystore
+            val ksFile = System.getenv("ANDROID_KEYSTORE_FILE")
+            if (!ksFile.isNullOrBlank() && file(ksFile).exists()) {
+                storeFile = file(ksFile)
+                storePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("ANDROID_KEY_ALIAS")
+                keyPassword = System.getenv("ANDROID_KEY_PASSWORD")
+            } else {
+                storeFile = file("oraclematch.keystore")
+                storePassword = "android"
+                keyAlias = "oraclematch"
+                keyPassword = "android"
+            }
         }
     }
 
