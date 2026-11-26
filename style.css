@@ -1,0 +1,514 @@
+/* 字体：tools/build_oraclelist.py 生成的精简字体，只含字库里的字 */
+@font-face {
+    font-family: 'FZOracle';
+    src: url('fonts/oracle.woff2') format('woff2');
+    font-display: block;
+}
+
+@font-face {
+    font-family: 'OracleKaiti';
+    src: url('fonts/kaiti.woff2') format('woff2');
+    font-display: swap;
+}
+
+.oracle-font {
+    font-family: "FZOracle", serif;
+    font-weight: normal;
+}
+
+.kaiti-font {
+    font-family: "OracleKaiti", "Kaiti SC", "STKaiti", "KaiTi", "楷体", serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Microsoft YaHei', Arial, sans-serif;
+    background: linear-gradient(135deg, #8b4513 0%, #5c2e0e 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.container {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 900px;
+    width: 100%;
+}
+
+h1 {
+    text-align: center;
+    color: #8b4513;
+    margin-bottom: 30px;
+    font-size: 2.5em;
+}
+
+/* 隐藏类 */
+.hidden {
+    display: none !important;
+}
+
+/* 界面一：输入界面 */
+.input-screen {
+    display: block;
+}
+
+.instructions {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    line-height: 1.8;
+    color: #555;
+}
+
+.instructions strong {
+    color: #8b4513;
+}
+
+textarea {
+    width: 100%;
+    min-height: 300px;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: 'Microsoft YaHei', monospace;
+    resize: vertical;
+    transition: border-color 0.3s;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #8b4513;
+}
+
+.btn {
+    width: 100%;
+    padding: 15px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #8b4513 0%, #5c2e0e 100%);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(139, 69, 19, 0.3);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+    margin-top: 10px;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+}
+
+.btn-success {
+    background: #28a745;
+    color: white;
+}
+
+.btn-success:hover {
+    background: #218838;
+}
+
+/* 界面二：游戏界面 */
+.game-screen {
+    display: block;
+}
+
+.timer {
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    color: #8b4513;
+    padding: 6px 16px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    white-space: nowrap;
+}
+
+/* 游戏中：界面占满整个屏幕，卡片大小由 js/game.js 根据屏幕计算 */
+body.playing {
+    padding: 8px;
+    align-items: stretch;
+}
+
+body.playing .container {
+    max-width: 1400px;
+    padding: 12px 16px;
+    height: calc(100vh - 16px);
+    height: calc(100dvh - 16px);
+    display: flex;
+    flex-direction: column;
+}
+
+body.playing .game-screen {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.game-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.game-board {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    width: 100%;
+        --char-font: 36px;
+}
+
+.card {
+    position: relative;
+    background: linear-gradient(135deg, #8b4513 0%, #5c2e0e 100%);
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: var(--char-font);
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s;
+    user-select: none;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.card.card-char {
+    font-size: var(--char-font);
+    font-family: "OracleKaiti", "Kaiti SC", "STKaiti", "KaiTi", "楷体", serif;
+}
+
+/* 甲骨文卡：像骨片的颜色，深褐色字形 */
+.card.card-oracle {
+    font-size: calc(var(--char-font) * 1.08);
+    font-family: "FZOracle", serif;
+    font-weight: normal;
+    background: linear-gradient(135deg, #f6ecd4 0%, #e3cfa3 100%);
+    color: #5c2e0e;
+    border: 2px solid #c9ab72;
+}
+
+/* 翻翻乐：卡片背面 */
+.card.face-down {
+    background: linear-gradient(135deg, #6d6d6d 0%, #3f3f3f 100%);
+    color: transparent;
+    border-color: transparent;
+}
+
+.card.face-down::after {
+    content: '?';
+    position: absolute;
+    font-family: 'Microsoft YaHei', Arial, sans-serif;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: var(--char-font);
+}
+
+.card.flip {
+    animation: flip 0.3s ease-out;
+}
+
+@keyframes flip {
+    from {
+        transform: rotateY(90deg);
+    }
+    to {
+        transform: rotateY(0);
+    }
+}
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(139, 69, 19, 0.4);
+}
+
+.card.selected {
+    background: linear-gradient(135deg, #e8a13a 0%, #c0392b 100%);
+    transform: scale(1.1);
+}
+
+.card.matched {
+    animation: fadeOut 0.5s ease-out forwards;
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        transform: scale(0);
+    }
+}
+
+/* 成功提示 */
+.success-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 50px;
+    border-radius: 20px;
+    text-align: center;
+    animation: bounceIn 0.5s;
+}
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.modal-content h2 {
+    color: #28a745;
+    font-size: 3em;
+    margin-bottom: 20px;
+}
+
+.modal-content p {
+    font-size: 1.5em;
+    color: #555;
+    margin-bottom: 30px;
+}
+
+.modal-buttons {
+    flex-wrap: wrap;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.modal-buttons .btn {
+    width: auto;
+    min-width: 150px;
+    margin-top: 0;
+}
+
+/* 界面三：结束界面 */
+.end-screen {
+    display: block;
+    text-align: center;
+}
+
+.end-screen h2 {
+    color: #8b4513;
+    font-size: 2em;
+    margin-top: 50px;
+}
+
+/* 响应式设计 */
+@media (max-width: 600px) {
+    .container {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    .modal-content {
+        padding: 30px;
+    }
+
+    .modal-content h2 {
+        font-size: 2em;
+    }
+}
+
+/* 课次选择 */
+.lesson-picker {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #555;
+}
+
+.lesson-picker label {
+    font-weight: bold;
+    color: #8b4513;
+}
+
+.lesson-picker select {
+    flex: 1;
+    min-width: 200px;
+    padding: 10px 12px;
+    font-size: 18px;
+    font-family: inherit;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    background: white;
+    cursor: pointer;
+}
+
+.lesson-picker select:focus {
+    outline: none;
+    border-color: #8b4513;
+}
+
+.lesson-info {
+    color: #888;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.lesson-preview {
+    background: #f8f4ea;
+    padding: 12px;
+    border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    max-height: 260px;
+    overflow-y: auto;
+}
+
+.preview-chip {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    width: 46px;
+    padding: 4px 0;
+    background: white;
+    border: 1px solid #e3cfa3;
+    border-radius: 8px;
+    line-height: 1.2;
+}
+
+.preview-chip .oracle-font {
+    font-size: 26px;
+    color: #5c2e0e;
+}
+
+.preview-chip .kaiti-font {
+    font-size: 18px;
+    color: #444;
+}
+
+.game-lesson {
+    color: #888;
+    font-size: 18px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mode-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 4px 0 12px;
+    font-size: 17px;
+    color: #555;
+    cursor: pointer;
+}
+
+.mode-option input {
+    width: 20px;
+    height: 20px;
+    accent-color: #8b4513;
+    cursor: pointer;
+}
+
+.mode-option strong {
+    color: #8b4513;
+}
+
+.game-hint {
+    text-align: center;
+    color: #b8860b;
+    background: #fff8e1;
+    border-radius: 10px;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+
+/* 标题、说明、页脚 */
+h1 {
+    margin-bottom: 6px;
+}
+
+.title-oracle {
+    display: block;
+    font-size: 1.3em;
+    letter-spacing: 0.15em;
+    color: #a0522d;
+}
+
+.subtitle {
+    text-align: center;
+    color: #888;
+    margin-bottom: 24px;
+    font-size: 17px;
+}
+
+#customArea textarea {
+    min-height: 110px;
+    margin-bottom: 10px;
+    font-size: 22px;
+}
+
+.footer {
+    margin-top: 18px;
+    text-align: center;
+    font-size: 13px;
+    color: #aaa;
+}
+
+.footer a {
+    color: #a0522d;
+}
+
+.card.card-oracle.selected {
+    color: white;
+    border-color: transparent;
+}

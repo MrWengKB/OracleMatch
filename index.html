@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>甲骨文配对游戏</title>
+    <meta name="description" content="甲骨文和楷书配对的识字小游戏，按年级、课次选字，还有翻翻乐模式。">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preload" href="fonts/oracle.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/kaiti.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+</head>
+<body>
+    <div class="container">
+        <!-- 界面一：选择字表 -->
+        <div class="input-screen" id="inputScreen">
+            <h1><span class="oracle-font title-oracle">甲骨文</span>甲骨文配对游戏</h1>
+            <p class="subtitle">把甲骨文和今天的汉字配成一对</p>
+
+            <div class="lesson-picker">
+                <label for="gradeSelect">年级：</label>
+                <select id="gradeSelect" onchange="onGradeChange()">
+                    <!-- 选项由 js/game.js 生成 -->
+                </select>
+            </div>
+            <div class="lesson-picker">
+                <label for="lessonSelect">课次：</label>
+                <select id="lessonSelect" onchange="updateLessonInfo()">
+                    <!-- 选项由 js/game.js 生成 -->
+                </select>
+            </div>
+            <div class="lesson-picker" id="countPicker">
+                <label for="wordCount">字数：</label>
+                <select id="wordCount" onchange="updateLessonInfo()">
+                    <option value="6">6 字</option>
+                    <option value="10" selected>10 字</option>
+                    <option value="15">15 字</option>
+                    <option value="20">20 字</option>
+                    <option value="30">30 字</option>
+                </select>
+            </div>
+            <label class="mode-option">
+                <input type="checkbox" id="flipMode" onchange="saveSelection()">
+                <span><strong>翻翻乐</strong>：先看 3 秒，卡片翻过去后凭记忆配对</span>
+            </label>
+
+            <!-- 自定义字表 -->
+            <div id="customArea" class="hidden">
+                <div class="instructions">
+                    <strong>使用说明：</strong>输入想练习的汉字，可以连着写，也可以用空格、逗号或换行隔开。<br>
+                    只有找得到甲骨文的字才会出现在游戏里（目前字库是一至四年级识读字里有甲骨文的字）。
+                </div>
+                <textarea id="wordInput" oninput="updateLessonInfo()" placeholder="例如：日月水火山木人口"></textarea>
+            </div>
+
+            <div class="lesson-info" id="lessonInfo"></div>
+            <div class="lesson-preview hidden" id="lessonPreview"></div>
+
+            <button class="btn btn-primary" id="startBtn" onclick="startGame()">生成游戏</button>
+            <p class="footer">甲骨文字形：方正甲骨文字体 · 字表来自 <a href="https://github.com/MrWengKB/HanziQuery" target="_blank" rel="noopener">HanziQuery</a> · <span id="appVersion">v1.0.0</span></p>
+        </div>
+
+        <!-- 界面二：游戏界面 -->
+        <div class="game-screen hidden" id="gameScreen">
+            <div class="game-top">
+                <div class="game-lesson" id="gameLesson"></div>
+                <div class="timer" id="timer">时间：00:00</div>
+            </div>
+            <div class="game-board" id="gameBoard"></div>
+        </div>
+
+        <!-- 成功提示弹窗 -->
+        <div class="success-modal" id="successModal">
+            <div class="modal-content">
+                <h2>🎉 成功过关！</h2>
+                <p>用时：<span id="finalTime"></span></p>
+                <div class="modal-buttons">
+                    <button class="btn btn-success" onclick="replayGame()">再玩一次</button>
+                    <button class="btn btn-secondary" onclick="backToMenu()">换课次</button>
+                    <button class="btn btn-secondary" onclick="closeGame()">关闭</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 界面三：结束界面 -->
+        <div class="end-screen hidden" id="endScreen">
+            <h1>👋</h1>
+            <h2>现在你可以关闭窗口了</h2>
+        </div>
+    </div>
+
+    <script src="js/oraclelist.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
