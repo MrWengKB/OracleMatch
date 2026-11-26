@@ -25,11 +25,11 @@ fun latestVersionName(): String {
 }
 
 android {
-    namespace = "com.mrwengkb.oraclematch"
+    namespace = "io.github.mrwengkb.oraclematch"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.mrwengkb.oraclematch"
+        applicationId = "io.github.mrwengkb.oraclematch"
         minSdk = 26
         targetSdk = 35
         // 每次 GitHub Actions 构建自动递增版本号，方便覆盖安装

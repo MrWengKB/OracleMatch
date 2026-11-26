@@ -1,4 +1,4 @@
-package com.mrwengkb.oraclematch;
+package io.github.mrwengkb.oraclematch;
 
 import android.app.Activity;
 import android.app.AlertDialog;

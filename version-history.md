@@ -1,3 +1,6 @@
+# 更新内容 v1.2.1
+- 安卓包名改为 io.github.mrwengkb.oraclematch（上架 Google Play 前调整；之前装过的请先卸载再安装新版）
+
 # 更新内容 v1.2.0
 - 准备上架 Google Play：AAB 改为 Play 版（目标 SDK 35，由 Play 商店更新，不需要网络权限）
 - APK 仍放在 GitHub，启动时检查更新
