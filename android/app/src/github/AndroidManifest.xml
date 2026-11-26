@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 只有 GitHub 版（APK）需要网络：仅用于检查更新，游戏本身完全离线。Play 版（AAB）没有这个权限。 -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET" />
+</manifest>

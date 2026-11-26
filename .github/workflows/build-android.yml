@@ -23,7 +23,7 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: "8.7"
+          gradle-version: "8.9"
 
       - name: 准备签名密钥（有设置 Secrets 才会使用）
         env:
@@ -43,12 +43,12 @@ jobs:
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-        run: gradle assembleRelease bundleRelease --no-daemon
+        run: gradle assembleGithubRelease bundlePlayRelease --no-daemon
 
       - name: 重命名
         run: |
-          cp android/app/build/outputs/apk/release/app-release.apk OracleMatch.apk
-          cp android/app/build/outputs/bundle/release/app-release.aab OracleMatch.aab
+          cp android/app/build/outputs/apk/github/release/app-github-release.apk OracleMatch.apk
+          cp android/app/build/outputs/bundle/playRelease/app-play-release.aab OracleMatch.aab
 
       - name: 保存为构建产物
         uses: actions/upload-artifact@v4
@@ -66,7 +66,7 @@ jobs:
           awk '/^[[:space:]]*#/{n++} n==1' version-history.md > latest-notes.md
           VERSION=$(grep -oE '[vV][0-9]+(\.[0-9]+)*' latest-notes.md | head -1)
           {
-            echo "第 ${{ github.run_number }} 次构建。手机下载 OracleMatch.apk 安装即可离线使用；OracleMatch.aab 用于上传应用商店。"
+            echo "第 ${{ github.run_number }} 次构建。手机下载 OracleMatch.apk 安装即可离线使用；OracleMatch.aab 用于上传 Google Play（Play 版不含自带的检查更新，由 Play 商店负责更新）。"
             echo
             cat latest-notes.md
           } > release-notes.md

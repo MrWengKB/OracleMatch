@@ -9,6 +9,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.WindowInsets;
+import android.widget.FrameLayout;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -75,7 +77,25 @@ public class MainActivity extends Activity {
 
         webView = new WebView(this);
         webView.setBackgroundColor(0xFF6E3712);
-        setContentView(webView);
+
+        // Android 15 起 App 会画到状态栏和导航栏下面（edge-to-edge），
+        // 所以外面包一层，按系统栏的高度留出空白，网页不会被挡住
+        FrameLayout root = new FrameLayout(this);
+        root.setBackgroundColor(0xFF6E3712);
+        root.addView(webView, new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+        root.setOnApplyWindowInsetsListener((v, insets) -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                android.graphics.Insets i = insets.getInsets(
+                        WindowInsets.Type.systemBars() | WindowInsets.Type.displayCutout());
+                v.setPadding(i.left, i.top, i.right, i.bottom);
+            } else {
+                v.setPadding(insets.getSystemWindowInsetLeft(), insets.getSystemWindowInsetTop(),
+                        insets.getSystemWindowInsetRight(), insets.getSystemWindowInsetBottom());
+            }
+            return insets;
+        });
+        setContentView(root);
 
         WebSettings s = webView.getSettings();
         s.setJavaScriptEnabled(true);
@@ -106,7 +126,8 @@ public class MainActivity extends Activity {
 
         webView.loadUrl(START_URL);
 
-        if (savedInstanceState == null) {
+        // 只有 GitHub 版检查更新；Play 版由 Play 商店更新
+        if (savedInstanceState == null && BuildConfig.UPDATE_CHECK) {
             checkForUpdate();
         }
     }

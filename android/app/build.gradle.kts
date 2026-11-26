@@ -26,12 +26,12 @@ fun latestVersionName(): String {
 
 android {
     namespace = "com.mrwengkb.oraclematch"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.mrwengkb.oraclematch"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 35
         // 每次 GitHub Actions 构建自动递增版本号，方便覆盖安装
         versionCode = (System.getenv("GITHUB_RUN_NUMBER") ?: "1").toInt()
         // 显示给用户看的版本名称，取自 version-history.md 的最新版本
@@ -56,6 +56,25 @@ android {
                 keyPassword = "android"
             }
         }
+    }
+
+    // 两个版本：
+    //   github：放在 GitHub Releases 的 APK，启动时检查更新（用户选择下载安装或以后再说）
+    //   play：上传 Google Play 的 AAB，由 Play 商店负责更新，不含自带的检查更新，也不需要网络权限
+    flavorDimensions += "store"
+    productFlavors {
+        create("github") {
+            dimension = "store"
+            buildConfigField("boolean", "UPDATE_CHECK", "true")
+        }
+        create("play") {
+            dimension = "store"
+            buildConfigField("boolean", "UPDATE_CHECK", "false")
+        }
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     buildTypes {
