@@ -23,7 +23,7 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: "8.9"
+          gradle-version: "8.13"
 
       - name: 准备签名密钥（有设置 Secrets 才会使用）
         env:

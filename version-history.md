@@ -1,3 +1,7 @@
+# 更新内容 v1.2.2
+- 安卓版目标 API 升到 36（Google Play 最新要求）
+- 适配 Android 16 的返回键
+
 # 更新内容 v1.2.1
 - 安卓包名改为 io.github.mrwengkb.oraclematch（上架 Google Play 前调整；之前装过的请先卸载再安装新版）
 

@@ -26,12 +26,12 @@ fun latestVersionName(): String {
 
 android {
     namespace = "io.github.mrwengkb.oraclematch"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "io.github.mrwengkb.oraclematch"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 36
         // 每次 GitHub Actions 构建自动递增版本号，方便覆盖安装
         versionCode = (System.getenv("GITHUB_RUN_NUMBER") ?: "1").toInt()
         // 显示给用户看的版本名称，取自 version-history.md 的最新版本

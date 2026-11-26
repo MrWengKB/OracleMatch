@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.WindowInsets;
+import android.window.OnBackInvokedDispatcher;
 import android.widget.FrameLayout;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
@@ -125,6 +126,12 @@ public class MainActivity extends Activity {
         });
 
         webView.loadUrl(START_URL);
+
+        // Android 13+ 用新的返回键接口（targetSdk 36 起系统不再调用 onBackPressed）
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
+                    OnBackInvokedDispatcher.PRIORITY_DEFAULT, this::handleBack);
+        }
 
         // 只有 GitHub 版检查更新；Play 版由 Play 商店更新
         if (savedInstanceState == null && BuildConfig.UPDATE_CHECK) {
@@ -323,6 +330,11 @@ public class MainActivity extends Activity {
     @Override
     @SuppressWarnings("deprecation")
     public void onBackPressed() {
+        handleBack();
+    }
+
+    /** 返回键：游戏中先回到设置面板，在设置面板再按才退出 */
+    private void handleBack() {
         webView.evaluateJavascript(CLOSE_MODAL_JS, value -> {
             if ("true".equals(value)) {
                 return;
