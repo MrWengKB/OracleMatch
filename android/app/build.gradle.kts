@@ -11,6 +11,12 @@ val copyWeb by tasks.registering(Sync::class) {
         include("index.html", "style.css", "oraclelist.csv", "fonts/**", "js/**", "favicon.svg")
     }
     into(webAssetsDir.map { it.dir("www") })
+    // Children's app (Google Play Families): remove Google Analytics from every page packed into the APK/AAB
+    doLast {
+        webAssetsDir.get().dir("www").asFile.walkTopDown().filter { it.isFile && it.extension == "html" }.forEach { f ->
+            f.writeText(f.readText(Charsets.UTF_8).replace(Regex("""(?s)<!-- GA-START.*?<!-- GA-END -->\s*"""), ""), Charsets.UTF_8)
+        }
+    }
 }
 
 // 从 version-history.md 第一个 # 标题读出版本号，例如「# 更新内容 v2.5.1」→「2.5.1」
